@@ -8,13 +8,13 @@ local homestore_opts = {
 
 -- Runs when the plugin is enabled
 function lukkit.plugin:enable()
-  local plugin_name = self.info:get_name();
+  local plugin_name = self.info.name
   self.logger:info("Enabling {}", plugin_name)
 end
 
 -- Runs when the plugin is disabled (shutdown, reload etc.)
 function lukkit.plugin:disable()
-  local plugin_name = self.info:get_name();
+  local plugin_name = self.info.name
   self.logger:info("Disabling {}", plugin_name)
 end
 
@@ -39,7 +39,7 @@ function lukkit.plugin:command(cmd, sender, args)
     -- Functional wrapper to only execute if the sender is a player, no-op if not
     sender:if_player(function(player)
         -- Gets the player's current display name. May or may not be the account name
-        local name = player:display_name()
+        local name = player.display_name
         -- Fetch the home store. If not found the resulting LOption will not have a value
         local home_store = self.store:get("homes")
 
@@ -88,7 +88,7 @@ function lukkit.plugin:command(cmd, sender, args)
         home_store:set(home_key, current_pos)
 
         player:message("Your home has bee set at {x,y,z}!", current_pos)
-        cmd:succeed("Set home for player {}", player:display_name())
+        cmd:succeed("Set home for player {}", player.display_name)
     end)
   end
 end
