@@ -35,9 +35,10 @@ end
 function lukkit.plugin:command(cmd, sender, args)
   -- Handles any case permutation of "home" (e.g. "home", "Home", "HOME" etc.)
   if (cmd:equals_lower("home")) then
-
     -- Functional wrapper to only execute if the sender is a player, no-op if not
-    sender:if_player(function(player)
+    if (sender.is_player) then
+        local player = sender:as_player()
+
         -- Gets the player's current display name. May or may not be the account name
         local name = player.display_name
         -- Fetch the home store. If not found the resulting LOption will not have a value
@@ -69,15 +70,17 @@ function lukkit.plugin:command(cmd, sender, args)
 
           	cmd:fail("No home set for player {}", name)
         end)
-    end)
+    end
 
     -- Tell the server the command was a success, optional
     -- Ideally this would show in TRACE logs, idk
     return cmd:succeed("Command worked perfectly")
   end
 
-  if (cmd:equals_lower("sethome"))
-    sender:if_player(function(player)
+  if (cmd:equals_lower("sethome")) then
+    if (sender.is_player) then
+        local player = sender:as_player()
+
         -- Get the current XYZ position of the player, without eye co-ords
     	local current_pos = player:location():position()
 
@@ -89,6 +92,6 @@ function lukkit.plugin:command(cmd, sender, args)
 
         player:message("Your home has bee set at {x,y,z}!", current_pos)
         cmd:succeed("Set home for player {}", player.display_name)
-    end)
+    end
   end
 end
